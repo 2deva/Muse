@@ -1,6 +1,6 @@
-# shared_listening_app
+Music_app
 
-A new Flutter project.
+Simple music application
 
 ## Getting Started
 
