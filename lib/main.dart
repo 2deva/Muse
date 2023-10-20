@@ -181,7 +181,7 @@ void _uploadSong() async {
       if (platformFile.bytes != null) {
         // Create a reference to the location you want to upload to in Firebase Storage
         FirebaseStorage storage = FirebaseStorage.instance;
-        Reference ref = storage.ref().child("gs://shared-muse.appspot.com/music");
+        Reference ref = storage.ref().child("gs://yourfile address");
 
         // Upload the file to Firebase Storage
         UploadTask uploadTask = ref.putData(platformFile.bytes!);
