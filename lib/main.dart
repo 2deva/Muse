@@ -12,11 +12,11 @@ final _player = AudioPlayer();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: firebaseOptions);
-  runApp(const SharedListeningApp());
+  runApp(const ListeningApp());
 }
 
-class SharedListeningApp extends StatelessWidget {
-  const SharedListeningApp({Key? key}) : super(key: key);
+class ListeningApp extends StatelessWidget {
+  const ListeningApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
