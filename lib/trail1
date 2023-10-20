@@ -1,0 +1,232 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart'; // Don't forget to import this!
+
+final FirebaseOptions firebaseOptions = FirebaseOptions(
+apiKey: 'AIzaSyAxduPnZbLCoIZxCJYgUIIMdZa0dGZdFLA',
+  appId: '1:658094478499:web:00690f0348719f04181b16',
+  messagingSenderId: '658094478499',
+  projectId: 'shared-muse',
+  authDomain: 'shared-muse.firebaseapp.com',
+  storageBucket: 'shared-muse.appspot.com',
+  measurementId: 'G-DL7WV38CGV',
+);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: firebaseOptions);
+  runApp(const SharedListeningApp());
+}
+
+class SharedListeningApp extends StatelessWidget {
+  const SharedListeningApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+  return MaterialApp(
+    title: 'muse',
+    debugShowCheckedModeBanner: false, // remove debug tag
+    theme: ThemeData.dark().copyWith(
+    primaryColor: Colors.blueGrey[900],
+    scaffoldBackgroundColor: Colors.blueGrey[800],
+    hintColor: Colors.blueGrey[100],
+    textTheme: const TextTheme(
+      bodyMedium: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+    ),
+    ),
+    home: const  HomePage(),
+  );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isLoggedIn = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String _currentSong = 'None';
+  final _chatController = TextEditingController();
+  List<String> _messages = [];
+
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+    title: const Text('muse'),
+    centerTitle: true,
+    leading: _isLoggedIn ? IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: () {
+        _logout();
+      },
+    ) : null,
+    ),
+    body: _isLoggedIn ? _buildMainInterface() : _buildLoginInterface(),
+  );
+  }
+
+  Widget _buildLoginInterface() {
+  return Center(
+    child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      TextField(
+      controller: _usernameController,
+      decoration: InputDecoration(
+        labelText: 'Username',
+        labelStyle: TextStyle(color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blueGrey[100]!),
+        ),
+      ),
+      style: TextStyle(color: Colors.white),
+      ),
+      TextField(
+      controller: _passwordController,
+      obscureText: true,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        labelStyle: TextStyle(color: Colors.white),
+        enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blueGrey[100]!),
+        ),
+      ),
+      style: TextStyle(color: Colors.white),
+      ),
+      ElevatedButton(
+      child: Text('Login'),
+      onPressed: () {
+        if (_usernameController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        _login();
+        }
+      },
+      ),
+      SizedBox(height: 10),
+      ElevatedButton(
+      child: Text('Sign Up'),
+      onPressed: () {
+        if (_usernameController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        _signup();
+        }
+      },
+      ),
+    ],
+    ),
+  );
+  }
+
+    Future<void> _login() async {
+  try {
+    await _auth.signInWithEmailAndPassword(
+    email: _usernameController.text,
+    password: _passwordController.text,
+    );
+    setState(() {
+    _isLoggedIn = true;
+    });
+  } catch (e) {
+    // Handle authentication error (e.g., show an alert or a Snackbar)
+    print(e);
+  }
+  }
+
+  Future<void> _signup() async {
+  try {
+    await _auth.createUserWithEmailAndPassword(
+    email: _usernameController.text,
+    password: _passwordController.text,
+    );
+    setState(() {
+    _isLoggedIn = true;
+    });
+  } catch (e) {
+    // Handle authentication error (e.g., show an alert or a Snackbar)
+    print(e);
+  }
+  }
+  Future<void> _logout() async { 
+  await _auth.signOut();
+  setState(() {
+    _isLoggedIn = false;
+  });
+  }
+
+  Widget _buildMainInterface() {
+  return Column(
+    children: [
+    ListTile(
+      title: Text("Currently Playing: $_currentSong"),
+    ),
+    ElevatedButton(
+      child: Text("Play Song 1"),
+      onPressed: () {
+      setState(() {
+        _currentSong = "Song 1";
+      });
+      },
+    ),
+    ElevatedButton(
+      child: Text("Play Song 2"),
+      onPressed: () {
+      setState(() {
+        _currentSong = "Song 2";
+      });
+      },
+    ),
+    Expanded(
+      child: ListView.builder(
+      itemCount: _messages.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+        title: Text(_messages[index]),
+        );
+      },
+      ),
+    ),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+      children: [
+        Expanded(
+        child: TextField(
+          controller: _chatController,
+          decoration: const InputDecoration(
+          hintText: 'Type a message...',
+          ),
+        ),
+        ),
+        IconButton(
+        icon: Icon(Icons.send),
+        onPressed: () {
+          if (_chatController.text.isNotEmpty) {
+          setState(() {
+            _messages.add(_chatController.text);
+            _chatController.clear();
+          });
+          }
+        },
+        )
+      ],
+      ),
+    ),
+    ],
+  );
+  }
+
+
+}

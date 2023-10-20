@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "658094478499",
+    "project_id": "shared-muse",
+    "storage_bucket": "shared-muse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658094478499:android:ee0e7b63408a320c181b16",
+        "android_client_info": {
+          "package_name": "com.example.shared_listening_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658094478499-pvlmh285gcnoc4gp5mmp1q1sslhjobpf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbosLOQ7OBo6fNH6mg9U86tUGxy3-MutE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658094478499-pvlmh285gcnoc4gp5mmp1q1sslhjobpf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "658094478499-4sd3g6q4vkr91c7ga9ntp1ljujgvo5rf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sharedListeningApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
